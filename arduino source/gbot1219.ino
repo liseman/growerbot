@@ -2,11 +2,11 @@
 //thanks to sparkfun (pcb layout libraries), adafruit (tsl2561, dht libraries), and arduino (community support, libraries). please support them all!
 
 //garden name and growth profile
-String growName = "indoor vertical";
+String growName = "spare3's garden";
 String sourceName = "D.H. Landreth";
-String sourceVariety = "heirloom peppers";
+String sourceVariety = "yams";
 String apName = "";
-String urlName = "l1.growerbot.com";
+String urlName = "growerbot.com";
 
 //lcd
 #include <LiquidCrystal.h>
@@ -163,7 +163,7 @@ void setup()
   //blink lights this frequency, to make sure we're not leaving them on when natural light is sufficient
   Alarm.timerRepeat(lightCheckFrequency, lightCheck);
   //todo: reset daily stuff, proportions every day
-  //Alarm.timerRepeat(resetInterval, resetStuff);
+  Alarm.timerRepeat(86400, dayUpdate);
   //serial
   Serial.begin(9600);
   softSerial.begin(2400);
@@ -488,14 +488,15 @@ if (luxNew >= luxGoal)
 //calculate lightProportion
 lightProportion = timeBrightEnough / timeTotal;
 
-//turn on light if proportion < goal and luxNew < luxGoal
+//turn on light if proportion < goal //and (luxNew < luxGoal or light is on)
 if (lightProportion < lightProportionGoal && luxNew < luxGoal)
 {
   Serial.println("turning light on");
   digitalWrite(relayLight, HIGH);
   timeLightOn = timeLightOn + timeNew;
 }
-else digitalWrite(relayLight, LOW);
+//turn off light if lightroportion > lightproportiongoal
+if (lightProportion >= lightProportionGoal) digitalWrite(relayLight, LOW);
 
 timeOld = now();
 }
@@ -517,4 +518,10 @@ void sendData()
 void lightCheck()
 {
     digitalWrite(relayLight, LOW);
+}
+
+void dayUpdate()
+{
+  daysLeft = daysLeft--;
+  daysElapsed = daysElapsed++;  
 }
