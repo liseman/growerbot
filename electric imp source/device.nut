@@ -78,6 +78,6 @@ function writeStuff()
     //example of turning on water remotely
     //hardware.uart1289.write("Pp1\n");
     
-    imp.wakeup(5, writeStuff);
+    imp.wakeup(60, writeStuff);
 }
 writeStuff();
