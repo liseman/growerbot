@@ -1,4 +1,4 @@
-# Using the electric Imp with thegrower bot
+# Using the electric Imp with the growerbot
 
 ## For starters
 
@@ -13,5 +13,5 @@ Be aware that blinkup with android can be tricky. Please read the [BlickUp trobl
 
 ## What to do after!
 
-There is a good set of exemples in the [Electric imp Github](https://github.com/electricimp/reference) check the webservice section for interestings things
+There is a good set of exemples in the [Electric imp Github](https://github.com/electricimp/reference), check the webservice section for interestings things
 
