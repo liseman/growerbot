@@ -1,4 +1,4 @@
-# Using the electric Imp with the growerbot
+# Using the electric Imp with the Growerbot
 
 ## For starters
 
