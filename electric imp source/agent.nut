@@ -1,5 +1,5 @@
 function requestHandler(request, response) {
-    serveur.log("loaded");
+    server.log("loaded");
   try {
     // check if the user sent led as a query parameter
     local lastData = server.load();
@@ -27,7 +27,7 @@ function requestHandler(request, response) {
 
 function updateData(data){
     server.save(data);
-    serveur.log("saved");
+    server.log("saved");
 }
  
 // register the HTTP handler
