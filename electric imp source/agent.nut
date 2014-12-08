@@ -1,35 +1,19 @@
-function requestHandler(request, response) {
-    serveur.log("loaded");
-  try {
-    // check if the user sent led as a query parameter
-    local lastData = server.load();
-    local output = "<html><head><title>Test Growerbot</title></head><body><h1>Output data from Growerbot</h1>";
-    
-    if (lastData.len() != 0)
-    {
-        output = output + "<ul><li> Temperature : <strong>"+ lastData.temp +" &deg;C</strong></li>";
-        output = output + "<li> Moisture level : <strong>"+ lastData.moist +" </strong></li>";
-        output = output + "<li> Humidity : <strong>"+ lastData.humid +" %</strong></li>";
-        output = output + "<li> Light : <strong>"+ lastData.light +" Lux</strong></li></ul>";
-    }
-    else
-    {
-        output = output = output + "<h2>NO DATA YET!</h2>";
-    }
-    
-    output = output + "</body></html>";
-    // send a response back saying everything was OK.
-    response.send(200, output);
-  } catch (ex) {
-    response.send(500, "Internal Server Error: " + ex);
-  }
+const FEED_ID = "874455613";
+const API_KEY = "wu15xJAHf39lmYqOsIaTNfGFBRR8vxYfAdq0UYumkgqKlshM";
+function send_xively(body) {         //take in csv value
+    local xively_url = "https://api.xively.com/v2/feeds/" + FEED_ID + ".csv";       //setup url for csv
+    server.log(xively_url);
+    server.log(body);       //pring body for testing
+    local req = http.put(xively_url, {"X-ApiKey":API_KEY, "Content-Type":"text/csv", "User-Agent":"Xively-Imp-Lib/1.0"}, body);     //add headers
+    local res = req.sendsync();         //send request
+    if(res.statuscode != 200) {
+        server.log("error sending message: "+res.body);
+    }else device.send("status", (res.statuscode + " OK"));      //sends status to uart. this can be removed if not desired
 }
-
-function updateData(data){
-    server.save(data);
-    serveur.log("saved");
-}
- 
-// register the HTTP handler
-http.onrequest(requestHandler);
-device.on("update_date", updateData);
+  
+device.on("data", function(feedCSV) {       //take csv body in from device
+    server.log("device on");
+     
+    //send preformatted multi-ds csv
+    send_xively(feedCSV);         //send to function to call xively
+});
